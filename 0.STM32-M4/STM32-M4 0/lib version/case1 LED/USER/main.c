@@ -1,24 +1,17 @@
 #include "stm32f4xx.h"
 #include "usart.h"
-#include "delay.h"
-
-//ALIENTEK 探索者STM32F407开发板 实验0
-//STM32F4工程模板-库函数版本
-//技术支持：www.openedv.com
-//淘宝店铺：http://eboard.taobao.com
-//广州市星翼电子科技有限公司  
-//作者：正点原子 @ALIENTEK
+#include "delay.h" //delay functions modiy by users
+#include "led.h"
 
 int main(void)
 {
-	u32 t=0;
-	uart_init(115200);
-	delay_init(84);
-	
-  while(1){
-    printf("t:%d\r\n",t);
+	delay_init(168); //default clk 168MHz
+	LED_Init();
+	while(1){
+		GPIO_SetBits(GPIOF, GPIO_Pin_9|GPIO_Pin_10);   //High level(GPIO output 1) LED off
+		delay_ms(500); //delay 500ms
+    GPIO_ResetBits(GPIOF, GPIO_Pin_9|GPIO_Pin_10); //Low level(GPIO output 0) LED on
 		delay_ms(500);
-		t++;
 	}
 }
 
