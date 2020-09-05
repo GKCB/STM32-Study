@@ -13,7 +13,7 @@ int main(void)
 		GPIOF->ODR &= ~(1<<10);
 		delay_ms(500);
 		
-		GPIOF->ODR |= 1<<9;
+		GPIOF->ODR |= 1<<9;				
 		GPIOF->ODR |= 1<<10;
 		delay_ms(500);	
 	}
