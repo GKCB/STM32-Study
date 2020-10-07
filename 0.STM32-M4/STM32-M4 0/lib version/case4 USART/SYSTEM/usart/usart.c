@@ -2,7 +2,7 @@
 #include "usart.h"	
 ////////////////////////////////////////////////////////////////////////////////// 	 
 //如果使用ucos,则包括下面的头文件即可.
-#if SYSTEM_SUPPORT_UCOS
+#if SYSTEM_SUPPORT_OS
 #include "includes.h"					//ucos 使用	  
 #endif
 //////////////////////////////////////////////////////////////////////////////////	 
@@ -44,7 +44,7 @@ struct __FILE
 
 FILE __stdout;       
 //定义_sys_exit()以避免使用半主机模式    
-_sys_exit(int x) 
+void _sys_exit(int x) 
 { 
 	x = x; 
 } 
@@ -101,7 +101,7 @@ void uart_init(u32 bound){
 	
   USART_Cmd(USART1, ENABLE);  //使能串口1 
 	
-	USART_ClearFlag(USART1, USART_FLAG_TC);
+	//USART_ClearFlag(USART1, USART_FLAG_TC);
 	
 #if EN_USART1_RX	
 	USART_ITConfig(USART1, USART_IT_RXNE, ENABLE);//开启相关中断
@@ -121,7 +121,7 @@ void uart_init(u32 bound){
 void USART1_IRQHandler(void)                	//串口1中断服务程序
 {
 	u8 Res;
-#ifdef OS_TICKS_PER_SEC	 	//如果时钟节拍数定义了,说明要使用ucosII了.
+#if SYSTEM_SUPPORT_OS 		//如果SYSTEM_SUPPORT_OS为真，则需要支持OS.
 	OSIntEnter();    
 #endif
 	if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)  //接收中断(接收到的数据必须是0x0d 0x0a结尾)
@@ -147,7 +147,7 @@ void USART1_IRQHandler(void)                	//串口1中断服务程序
 			}
 		}   		 
   } 
-#ifdef OS_TICKS_PER_SEC	 	//如果时钟节拍数定义了,说明要使用ucosII了.
+#if SYSTEM_SUPPORT_OS 	//如果SYSTEM_SUPPORT_OS为真，则需要支持OS.
 	OSIntExit();  											 
 #endif
 } 
